@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DISCOUNSER - Distant Counseling Service</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav li {
+            margin: 0 10px;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        #hero {
+            background-image: url('https://source.unsplash.com/random/1600x400');
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        #hero h2 {
+            margin-top: 0;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #333;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+
+        .btn:hover {
+            background-color: #555;
+        }
+
+        #about, #services, #contact {
+            padding: 40px 20px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+
+        .service i {
+            font-size: 36px;
+            color: #333;
+        }
+
+        #testimonials {
+            background-color: #f4f4f4;
+            padding: 40px 20px;
+        }
+
+        .testimonials-slider {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .testimonial {
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>DISCOUNSER</h1>
+            <nav>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div class="container">
+            <h2>Welcome to DISCOUNSER</h2>
+            <p>We provide professional and distant counseling services to help you overcome life's challenges.</p>
+            <a href="#services" class="btn">Learn More</a>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+            <h2>About DISCOUNSER</h2>
+            <p>DISCOUNSER is a leading provider of distant counseling services. Our team of experienced and certified counselors are dedicated to helping individuals, couples, and families navigate through life's challenges and achieve their personal goals.</p>
+            <a href="#services" class="btn">Our Services</a>
+        </div>
+    </section>
+
+    <section id="services">
+        <div class="container">
+            <h2>Our Services</h2>
+            <div class="services-grid">
+                <div class="service">
+                    <i class="fas fa-user"></i>
+                    <h3>Individual Counseling</h3>
+                    <p>We offer personalized counseling sessions tailored to your unique needs and goals.</p>
+                </div>
+                <div class="service">
+                    <i class="fas fa-users"></i>
+                    <h3>Couples Counseling</h3>
+                    <p>Our couples counseling services help partners improve their relationship and resolve conflicts.</p>
+                </div>
+                <div class="service">
+                    <i class="fas fa-family"></i>
+                    <h3>Family Counseling</h3>
+                    <p>We provide a safe and supportive environment for families to address issues and strengthen their bonds.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials">
+        <div class="container">
+            <h2>What Our Clients Say</h2>
+            <div class="testimonials-slider">
+                <div class="testimonial">
+                    <p>"The counseling sessions with DISCOUNSER have been life-changing. I feel more confident and capable of handling life's challenges."</p>
+                    <span>- Jane Doe</span>
+                </div>
+                <div class="testimonial">
+                    <p>"The couples counseling helped my partner and I understand each other better and improve our communication."</p>
+                    <span>- John Smith</span>
+                </div>
+                <div class="testimonial">
+                    <p>"DISCOUNSER's family counseling brought our family closer together and helped us resolve long-standing issues."</p>
+                    <span>- Mary Johnson</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="container">
+            <h2>Contact Us</h2>
+            <form>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; DISCOUNSER 2023. All rights reserved.</p>
+            <ul>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+            </ul>
+        </div>
+    </footer>
+</body>
+</html>
