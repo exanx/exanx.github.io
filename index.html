@@ -1,269 +1,485 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Random Animations</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body, html {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background-color: #030308;
-      font-family: sans-serif;
-    }
-    canvas {
-      display: block;
-      width: 100vw;
-      height: 100vh;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EXANX'S WEB APPS</title>
+    <style>
+        /* --- VARIABLES & STRICT MONOCHROME THEME --- */
+        :root {
+            --bg-color: #000000;
+            --card-bg: #050505;
+            --card-border: #333333;
+            --accent-glow: #ffffff;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            /* Prevent scrolling while doors are closed */
+            overflow-y: hidden; 
+        }
+
+        body.doors-open {
+            overflow-y: auto;
+        }
+
+        /* --- FUTURISTIC DOORS --- */
+        .door {
+            position: fixed;
+            top: 0;
+            width: 50vw;
+            height: 100vh;
+            background-color: #000;
+            z-index: 9999;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #door-left {
+            left: 0;
+            border-right: 2px solid var(--accent-glow);
+            box-shadow: 10px 0 30px rgba(255,255,255,0.1);
+        }
+
+        #door-right {
+            right: 0;
+            border-left: 2px solid var(--accent-glow);
+            box-shadow: -10px 0 30px rgba(255,255,255,0.1);
+        }
+
+        /* Door Decals/Details */
+        .door-detail {
+            position: absolute;
+            width: 40px;
+            height: 120px;
+            border: 1px solid #333;
+        }
+        #door-left .door-detail { right: 20px; border-right: none; }
+        #door-right .door-detail { left: 20px; border-left: none; }
+
+        /* Door States */
+        body.doors-open #door-left {
+            transform: translateX(-100%);
+        }
+        body.doors-open #door-right {
+            transform: translateX(100%);
+        }
+
+        /* --- HEADER & ANIMATED TITLE --- */
+        header {
+            text-align: center;
+            padding: 5rem 2rem 3rem 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            color: var(--text-main);
+            /* Sci-Fi Title Animation */
+            opacity: 0;
+            transform: scale(1.1) translateY(20px);
+            filter: blur(10px);
+            letter-spacing: 15px;
+            animation: sciFiReveal 1.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+            animation-delay: 0.8s; /* Wait for doors to open */
+        }
+
+        @keyframes sciFiReveal {
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+                letter-spacing: 4px;
+            }
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 1rem;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 1.5s;
+        }
+
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-top: 1.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: bold;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 1.8s;
+            transition: color 0.3s ease;
+        }
+
+        .github-link:hover {
+            color: var(--text-main);
+        }
+
+        .github-link svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+            transition: transform 0.3s ease;
+        }
+
+        .github-link:hover svg {
+            transform: scale(1.1);
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* --- GRID LAYOUT --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        #app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+
+        /* --- CARD DESIGN (MONOCHROME) --- */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 4px; /* Sharper corners for sci-fi look */
+            overflow: hidden;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        /* B&W Spotlight */
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                600px circle at var(--mouse-x) var(--mouse-y),
+                rgba(255, 255, 255, 0.08),
+                transparent 40%
+            );
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover::before { opacity: 1; }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-glow);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- IMAGE CONTAINER --- */
+        .card-image-wrapper {
+            width: 100%;
+            /* Forces image container to 854x409 proportion regardless of screen size */
+            aspect-ratio: 854 / 409; 
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Grayscale removed, colors enabled */
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.4s ease;
+        }
+
+        .card:hover .card-image {
+            transform: scale(1.05);
+            filter: brightness(1.15); /* Slight brightness pop on hover */
+        }
+
+        .card-image-wrapper::after {
+            content: "[ IMAGE MISSING ]";
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #050505;
+            color: #555;
+            font-family: monospace;
+            font-size: 1rem;
+            z-index: -1;
+        }
+
+        /* --- CARD CONTENT --- */
+        .card-content {
+            padding: 1.5rem;
+            position: relative;
+            z-index: 1;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+            letter-spacing: 1px;
+            color: var(--text-main);
+        }
+
+        .card-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+        }
+
+        .card-link-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.8rem 1.2rem;
+            background: transparent;
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            font-weight: bold;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Button Hover Fill Effect */
+        .card-link-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--text-main);
+            transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            z-index: -1;
+        }
+
+        .card:hover .card-link-btn {
+            border-color: var(--text-main);
+            color: #000;
+        }
+
+        .card:hover .card-link-btn::before {
+            transform: translateX(100%);
+        }
+
+        .card-link-btn svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .card-link-btn svg {
+            transform: translateX(4px);
+        }
+
+        /* --- CARD ENTRANCE ANIMATION --- */
+        .animate-in {
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
 </head>
 <body>
-  <canvas id="stage"></canvas>
 
-  <script>
-    const canvas = document.getElementById('stage');
-    const ctx = canvas.getContext('2d');
+    <!-- FUTURISTIC DOORS -->
+    <div id="door-left" class="door">
+        <div class="door-detail"></div>
+    </div>
+    <div id="door-right" class="door">
+        <div class="door-detail"></div>
+    </div>
 
-    let width, height;
-    function resize() {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
+    <header>
+        <h1>EXANX'S WEB APPS</h1>
+        <p class="subtitle">System Directory // Access Granted</p>
+        <a href="https://github.com/exanx" class="github-link" target="_blank" rel="noopener noreferrer">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.285 0 .315.21.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+            GitHub Profile
+        </a>
+    </header>
 
-    // Helper functions
-    const random = (min, max) => Math.random() * (max - min) + min;
-    const randomInt = (min, max) => Math.floor(random(min, max + 1));
-    const randomColor = () => `hsl(${random(0, 360)}, 85%, 60%)`;
+    <main class="container">
+        <div id="app-grid">
+            <!-- Cards injected cleanly by JS -->
+        </div>
+    </main>
 
-    // Global state
-    let currentMode = 0;
-    let modeTimer = 0;
-    const MODE_DURATION = 500; // frames per animation switch (~8 seconds)
-    let state = {};
+    <script>
+        // ==========================================
+        // 1. APP DIRECTORY
+        // ==========================================
+        const myApps = [
+            {
+                imageId: "rosarium",
+                name: "Rosarium",
+                description: "A companion app to pray the Holy Rosary.",
+                link: "https://rosarium.web.app/"
+            },
+            {
+                imageId: "bibliasacra",
+                name: "Biblia Sacra",
+                description: "A Bible app that lets you read, note and create quote images. Real time cloud sync available.",
+                link: "https://bibliasacra.web.app/"
+            },
+            {
+                imageId: "simplexos",
+                name: "Simplex OS",
+                description: "A lightweight web-based desktop environment.",
+                link: "https://exanx.github.io/simplexos/"
+            },
+            {               
+                imageId: "idolon",
+                name: "Idolon",
+                description: "A privacy-first, BYOK web app for AI character roleplay. Features multi-provider support, client-side encryption, customizable themes, and group chats.",
+                link: "https://idolon.web.app/"
+            },
+            {
+                imageId: "qrgen",
+                name: "QRGen",
+                description: "A simple and efficient web app to generate custom QR codes instantly.",
+                link: "https://exanx.github.io/qrgen/"
+            }
+        ];
 
-    // --- ANIMATION 1: Neon Particle Constellation ---
-    function initConstellation() {
-      const count = 120;
-      const particles = [];
-      for (let i = 0; i < count; i++) {
-        particles.push({
-          x: random(0, width),
-          y: random(0, height),
-          vx: random(-1.5, 1.5),
-          vy: random(-1.5, 1.5),
-          radius: random(1.5, 3),
-          color: `hsl(${random(180, 280)}, 90%, 65%)`
+        // ==========================================
+        // 2. RENDER CARDS & ADD CLICK LOGIC
+        // ==========================================
+        const gridContainer = document.getElementById('app-grid');
+
+        myApps.forEach((app, index) => {
+            const card = document.createElement('a');
+            card.href = app.link;
+            card.className = 'card animate-in';
+            // Delay entrance so it happens after doors open
+            card.style.animationDelay = `${1 + (index * 0.15)}s`;
+
+            card.innerHTML = `
+                <div class="card-image-wrapper">
+                    <img src="./images/${app.imageId}.png" alt="${app.name}" class="card-image" onerror="this.style.display='none'">
+                </div>
+                <div class="card-content">
+                    <h2 class="card-title">${app.name}</h2>
+                    <p class="card-desc">${app.description}</p>
+                    <div class="card-link-btn">
+                        <span>Initialize</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            `;
+
+            // Redirect with Door Animation
+            card.addEventListener('click', (e) => {
+                e.preventDefault(); // Stop instant redirect
+                
+                // 1. Close doors
+                document.body.classList.remove('doors-open');
+                
+                // 2. Wait for animation to finish, then redirect
+                setTimeout(() => {
+                    window.location.href = app.link;
+                }, 800); // 800ms matches the CSS door transition time
+            });
+
+            gridContainer.appendChild(card);
         });
-      }
-      return { particles };
-    }
 
-    function drawConstellation(data) {
-      ctx.fillStyle = 'rgba(3, 3, 8, 0.25)';
-      ctx.fillRect(0, 0, width, height);
+        // ==========================================
+        // 3. MOUSE SPOTLIGHT EFFECT
+        // ==========================================
+        document.getElementById("app-grid").onmousemove = e => {
+            for(const card of document.getElementsByClassName("card")) {
+                const rect = card.getBoundingClientRect(),
+                      x = e.clientX - rect.left,
+                      y = e.clientY - rect.top;
 
-      const p = data.particles;
-      for (let i = 0; i < p.length; i++) {
-        p[i].x += p[i].vx;
-        p[i].y += p[i].vy;
-
-        if (p[i].x < 0 || p[i].x > width) p[i].vx *= -1;
-        if (p[i].y < 0 || p[i].y > height) p[i].vy *= -1;
-
-        ctx.beginPath();
-        ctx.arc(p[i].x, p[i].y, p[i].radius, 0, Math.PI * 2);
-        ctx.fillStyle = p[i].color;
-        ctx.fill();
-
-        for (let j = i + 1; j < p.length; j++) {
-          const dx = p[i].x - p[j].x;
-          const dy = p[i].y - p[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < 130) {
-            ctx.beginPath();
-            ctx.moveTo(p[i].x, p[i].y);
-            ctx.lineTo(p[j].x, p[j].y);
-            ctx.strokeStyle = `rgba(120, 180, 255, ${1 - dist / 130})`;
-            ctx.lineWidth = 0.6;
-            ctx.stroke();
-          }
+                card.style.setProperty("--mouse-x", `${x}px`);
+                card.style.setProperty("--mouse-y", `${y}px`);
+            };
         }
-      }
-    }
 
-    // --- ANIMATION 2: Hypnotic Vortex Tunnel ---
-    function initVortex() {
-      return { angle: 0, hue: 0 };
-    }
+        // ==========================================
+        // 4. DOOR OPENING LOGIC
+        // ==========================================
+        // Opens the doors when the page first loads
+        window.onload = () => {
+            setTimeout(() => {
+                document.body.classList.add('doors-open');
+            }, 300); // Slight delay for dramatic effect
+        };
 
-    function drawVortex(data) {
-      ctx.fillStyle = 'rgba(3, 3, 8, 0.08)';
-      ctx.fillRect(0, 0, width, height);
-
-      data.angle += 0.03;
-      data.hue = (data.hue + 0.8) % 360;
-
-      const centerX = width / 2;
-      const centerY = height / 2;
-      const numRings = 25;
-
-      ctx.save();
-      ctx.translate(centerX, centerY);
-
-      for (let i = 0; i < numRings; i++) {
-        const radius = (i * 18 + (data.angle * 20)) % (Math.max(width, height) * 0.7);
-        const currentAngle = data.angle + (i * 0.15);
-        
-        ctx.save();
-        ctx.rotate(currentAngle);
-        ctx.beginPath();
-        
-        const sides = 5 + (i % 3);
-        for (let s = 0; s < sides; s++) {
-          const a = (s * 2 * Math.PI) / sides;
-          const x = Math.cos(a) * radius;
-          const y = Math.sin(a) * radius;
-          if (s === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        }
-        ctx.closePath();
-
-        ctx.strokeStyle = `hsl(${(data.hue + i * 10) % 360}, 90%, 60%)`;
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      ctx.restore();
-    }
-
-    // --- ANIMATION 3: Cyber Firefly Flow ---
-    function initFireflies() {
-      const count = 150;
-      const flies = [];
-      for (let i = 0; i < count; i++) {
-        flies.push({
-          x: random(0, width),
-          y: random(0, height),
-          angle: random(0, Math.PI * 2),
-          speed: random(1.5, 3.5),
-          hue: random(0, 360),
-          size: random(2, 4)
+        // If the user presses the "Back" button in their browser, 
+        // this ensures the doors open back up immediately.
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) {
+                document.body.classList.add('doors-open');
+            }
         });
-      }
-      return { flies };
-    }
-
-    function drawFireflies(data) {
-      ctx.fillStyle = 'rgba(3, 3, 8, 0.12)';
-      ctx.fillRect(0, 0, width, height);
-
-      ctx.globalCompositeOperation = 'lighter';
-
-      data.flies.forEach(f => {
-        f.angle += random(-0.2, 0.2);
-        f.x += Math.cos(f.angle) * f.speed;
-        f.y += Math.sin(f.angle) * f.speed;
-
-        if (f.x < 0) f.x = width;
-        if (f.x > width) f.x = 0;
-        if (f.y < 0) f.y = height;
-        if (f.y > height) f.y = 0;
-
-        ctx.beginPath();
-        ctx.arc(f.x, f.y, f.size, 0, Math.PI * 2);
-        ctx.fillStyle = `hsl(${f.hue}, 100%, 70%)`;
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = `hsl(${f.hue}, 100%, 50%)`;
-        ctx.fill();
-      });
-
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.shadowBlur = 0;
-    }
-
-    // --- ANIMATION 4: Pulsing Digital Wave Matrix ---
-    function initWaveMatrix() {
-      return { step: 0 };
-    }
-
-    function drawWaveMatrix(data) {
-      ctx.fillStyle = 'rgba(3, 3, 8, 0.2)';
-      ctx.fillRect(0, 0, width, height);
-
-      data.step += 0.04;
-
-      const cols = 35;
-      const rows = 20;
-      const xSpacing = width / cols;
-      const ySpacing = height / rows;
-
-      for (let x = 0; x < cols; x++) {
-        for (let y = 0; y < rows; y++) {
-          const dist = Math.sin(x * 0.3 + data.step) + Math.cos(y * 0.3 + data.step);
-          const radius = Math.max(1, (dist + 2) * 3);
-          const hue = ((x * 10 + y * 10) + data.step * 50) % 360;
-
-          const posX = x * xSpacing + xSpacing / 2;
-          const posY = y * ySpacing + ySpacing / 2;
-
-          ctx.beginPath();
-          ctx.arc(posX, posY, radius, 0, Math.PI * 2);
-          ctx.fillStyle = `hsl(${hue}, 85%, 60%)`;
-          ctx.fill();
-        }
-      }
-    }
-
-    // Modes Registry
-    const modes = [
-      { init: initConstellation, draw: drawConstellation },
-      { init: initVortex, draw: drawVortex },
-      { init: initFireflies, draw: drawFireflies },
-      { init: initWaveMatrix, draw: drawWaveMatrix }
-    ];
-
-    function switchMode() {
-      let nextMode;
-      do {
-        nextMode = randomInt(0, modes.length - 1);
-      } while (nextMode === currentMode && modes.length > 1);
-
-      currentMode = nextMode;
-      state = modes[currentMode].init();
-      modeTimer = 0;
-
-      // Clear stage on switch
-      ctx.fillStyle = '#030308';
-      ctx.fillRect(0, 0, width, height);
-    }
-
-    // Boot initial mode
-    switchMode();
-
-    // Loop
-    function loop() {
-      modes[currentMode].draw(state);
-      modeTimer++;
-
-      if (modeTimer >= MODE_DURATION) {
-        switchMode();
-      }
-
-      requestAnimationFrame(loop);
-    }
-
-    loop();
-  </script>
+    </script>
 </body>
 </html>
